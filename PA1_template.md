@@ -114,6 +114,7 @@ With missing values filled in, the **mean** total steps per day remains unchange
 imputed$day <- weekdays(strptime(imputed$date, format = "%Y-%m-%d"))
 imputed$weekday <- gsub("Monday|Tuesday|Wednesday|Thursday|Friday", "Weekday", imputed$day)
 imputed$weekday <- gsub("Saturday|Sunday", "Weekend", imputed$weekday)
+imputed$weekday <- as.factor(imputed$weekday)
 numweekdays <- length(unique(imputed[which (imputed$weekday == "Weekday"),"date"]))
 numweekenddays <- length(unique(imputed[which (imputed$weekday == "Weekend"),"date"]))
 
