@@ -38,7 +38,9 @@ The histogram below shows the distribution of total steps taken per day. This po
 
 
 ```r
-hist(stepsbyday$steps, main="Total Steps per Day\n(excludes missing values)", xlab="Steps per Day", col="slategray3")
+hist(stepsbyday$steps, main="Total Steps per Day\n(excludes missing values)",
+     xlab="Steps per Day", 
+     col="slategray3")
 ```
 
 <img src="figure/histogram_complete.png" title="plot of chunk histogram_complete" alt="plot of chunk histogram_complete" style="display: block; margin: auto;" />
@@ -55,7 +57,8 @@ avgstepsbyinterval <- stepsbyinterval
 numdays <- length(unique(complete$date))
 avgstepsbyinterval$steps <- avgstepsbyinterval$steps/numdays
 
-maxinterval <- avgstepsbyinterval[which (avgstepsbyinterval$steps == max(avgstepsbyinterval$steps)),"interval" ]
+maxinterval <- avgstepsbyinterval[which (avgstepsbyinterval$steps == 
+        max(avgstepsbyinterval$steps)),"interval" ]
 ```
 
 
@@ -63,7 +66,10 @@ The time series plot below shows the average number of steps taken per 5-minute 
 
 
 ```r
-plot(avgstepsbyinterval, main="Average Steps per Day by Time Interval", xlab="5-minute interval", ylab="Number Steps Taken (Averaged across All Days)", type="l")
+plot(avgstepsbyinterval, type="l",
+     main="Average Steps per Day by Time Interval", 
+     xlab="5-minute interval", 
+     ylab="Number Steps Taken (Averaged across All Days)")
 ```
 
 <img src="figure/time_series.png" title="plot of chunk time_series" alt="plot of chunk time_series" style="display: block; margin: auto;" />
@@ -85,7 +91,8 @@ The dataset includes a total of 2304 rows with missing values (NA).  Missing val
 imputed <- activity
 for (i in 1:nrow(imputed)) {
         if (is.na(imputed$steps[i])) 
-                {imputed$steps[i] <- avgstepsbyinterval$steps[which(avgstepsbyinterval$interval == imputed$interval[i])]
+                {imputed$steps[i] <- avgstepsbyinterval$steps[which
+                        (avgstepsbyinterval$interval == imputed$interval[i])]
                 imputed$imputed[i] <- "Y"}   
         else {imputed$imputed[i] <- "N"}
 }
@@ -99,7 +106,9 @@ Imputing missing data using the methodology described above has limited impact o
 
 
 ```r
-hist(stepsbydayimputed$steps, main="Total Steps per Day\n(missing values are imputed)", xlab="Steps per Day", col="slategray3") 
+hist(stepsbydayimputed$steps, col="slategray3",
+     main="Total Steps per Day\n(missing values are imputed)", 
+     xlab="Steps per Day") 
 ```
 
 <img src="figure/histogram_imputed.png" title="plot of chunk histogram_imputed" alt="plot of chunk histogram_imputed" style="display: block; margin: auto;" />
@@ -122,8 +131,10 @@ stepsbyinterval <- aggregate(steps ~ interval + weekday, data=imputed, sum)
 avgstepsbyinterval <- stepsbyinterval
 
 for (i in 1:nrow(avgstepsbyinterval)) {
-        if (avgstepsbyinterval$weekday[i] == "Weekday") {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekdays}
-        if (avgstepsbyinterval$weekday[i] == "Weekend") {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekenddays}
+        if (avgstepsbyinterval$weekday[i] == "Weekday") 
+                {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekdays}
+        if (avgstepsbyinterval$weekday[i] == "Weekend") 
+                {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekenddays}
 }
 ```
 
@@ -133,7 +144,11 @@ The panel plot below shows the difference in activity patterns between weekdays 
 
 ```r
 library(lattice)
-xyplot(steps ~ interval | weekday, data = avgstepsbyinterval, main="Average Steps per Day by Time Interval\nWeekend vs. Weekday",xlab="5-minute interval", ylab="Number Steps Taken (Averaged across All Days)", type="l", layout=c(1,2))
+xyplot(steps ~ interval | weekday, data = avgstepsbyinterval, 
+       main="Average Steps per Day by Time Interval\nWeekend vs. Weekday",
+       xlab="5-minute interval", 
+       ylab="Number Steps Taken (Averaged across All Days)", 
+       type="l", layout=c(1,2))
 ```
 
 <img src="figure/weekend_weeday.png" title="plot of chunk weekend_weeday" alt="plot of chunk weekend_weeday" style="display: block; margin: auto;" />

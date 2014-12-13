@@ -14,7 +14,7 @@ This assignment analyzes data from a personal activity monitoring device collect
 ###Load and Preprocess Data
 
 ```{r}
-setwd("~/Coursera/Reproducible Research/Course Project 1/RepData_PeerAssessment")
+setwd("~/Coursera/Reproducible Research/Course Project 1")
 activity <- read.csv("activity.csv", header=TRUE, stringsAsFactors=FALSE)
 ```
 
@@ -35,7 +35,9 @@ mediansteps <- median(stepsbyday$steps)
 The histogram below shows the distribution of total steps taken per day. This portion of the assignment ignores missing values (NA) in the dataset. 
 
 ```{r histogram_complete, fig.align='center'}
-hist(stepsbyday$steps, main="Total Steps per Day\n(excludes missing values)", xlab="Steps per Day", col="slategray3")
+hist(stepsbyday$steps, main="Total Steps per Day\n(excludes missing values)",
+     xlab="Steps per Day", 
+     col="slategray3")
 ```
 
 Excluding missing values, the individual represented in this dataset averaged `r format(meansteps, scientific=NA, big.mark=",")` **mean** total steps per day and `r format(mediansteps, scientific=NA, big.mark=",")` **median** steps per day.
@@ -49,14 +51,18 @@ avgstepsbyinterval <- stepsbyinterval
 numdays <- length(unique(complete$date))
 avgstepsbyinterval$steps <- avgstepsbyinterval$steps/numdays
 
-maxinterval <- avgstepsbyinterval[which (avgstepsbyinterval$steps == max(avgstepsbyinterval$steps)),"interval" ]
+maxinterval <- avgstepsbyinterval[which (avgstepsbyinterval$steps == 
+        max(avgstepsbyinterval$steps)),"interval" ]
 ```
 
 
 The time series plot below shows the average number of steps taken per 5-minute time interval, averaged across all days.
 
 ```{r time_series, fig.align='center'}
-plot(avgstepsbyinterval, main="Average Steps per Day by Time Interval", xlab="5-minute interval", ylab="Number Steps Taken (Averaged across All Days)", type="l")
+plot(avgstepsbyinterval, type="l",
+     main="Average Steps per Day by Time Interval", 
+     xlab="5-minute interval", 
+     ylab="Number Steps Taken (Averaged across All Days)")
 ```
 
 Averaged across all the days, the **`r maxinterval`** time interval contains the maximum number of steps taken.
@@ -74,7 +80,8 @@ The dataset includes a total of `r missing` rows with missing values (NA).  Miss
 imputed <- activity
 for (i in 1:nrow(imputed)) {
         if (is.na(imputed$steps[i])) 
-                {imputed$steps[i] <- avgstepsbyinterval$steps[which(avgstepsbyinterval$interval == imputed$interval[i])]
+                {imputed$steps[i] <- avgstepsbyinterval$steps[which
+                        (avgstepsbyinterval$interval == imputed$interval[i])]
                 imputed$imputed[i] <- "Y"}   
         else {imputed$imputed[i] <- "N"}
 }
@@ -87,7 +94,9 @@ medianstepsimputed <- median(stepsbydayimputed$steps)
 Imputing missing data using the methodology described above has limited impact on the mean or median total steps per day. The histogram below shows the distribution of total steps taken per day with missing values filled in.
 
 ```{r histogram_imputed, fig.align='center'}
-hist(stepsbydayimputed$steps, main="Total Steps per Day\n(missing values are imputed)", xlab="Steps per Day", col="slategray3") 
+hist(stepsbydayimputed$steps, col="slategray3",
+     main="Total Steps per Day\n(missing values are imputed)", 
+     xlab="Steps per Day") 
 ```
 
 With missing values filled in, the **mean** total steps per day remains unchanged at `r format(meanstepsimputed, digits=2, big.mark=",")`.  The **median** steps per day increases slightly from `r format(mediansteps, scientific=NA, big.mark=",")` to `r format(medianstepsimputed, scientific=NA, big.mark=",")`.
@@ -107,8 +116,10 @@ stepsbyinterval <- aggregate(steps ~ interval + weekday, data=imputed, sum)
 avgstepsbyinterval <- stepsbyinterval
 
 for (i in 1:nrow(avgstepsbyinterval)) {
-        if (avgstepsbyinterval$weekday[i] == "Weekday") {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekdays}
-        if (avgstepsbyinterval$weekday[i] == "Weekend") {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekenddays}
+        if (avgstepsbyinterval$weekday[i] == "Weekday") 
+                {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekdays}
+        if (avgstepsbyinterval$weekday[i] == "Weekend") 
+                {avgstepsbyinterval$steps[i] <- avgstepsbyinterval$steps[i]/numweekenddays}
 }
 ```
 
@@ -117,5 +128,9 @@ The panel plot below shows the difference in activity patterns between weekdays 
 
 ```{r weekend_weeday, fig.align='center'}
 library(lattice)
-xyplot(steps ~ interval | weekday, data = avgstepsbyinterval, main="Average Steps per Day by Time Interval\nWeekend vs. Weekday",xlab="5-minute interval", ylab="Number Steps Taken (Averaged across All Days)", type="l", layout=c(1,2))
+xyplot(steps ~ interval | weekday, data = avgstepsbyinterval, 
+       main="Average Steps per Day by Time Interval\nWeekend vs. Weekday",
+       xlab="5-minute interval", 
+       ylab="Number Steps Taken (Averaged across All Days)", 
+       type="l", layout=c(1,2))
 ```
